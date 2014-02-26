@@ -1,7 +1,9 @@
+/* -*- Mode: C; c-basic-offset:8 ; indent-tabs-mode:t -*- */
 /*
  * Core functions for libusb-compat-0.1
  * Copyright (C) 2008 Daniel Drake <dsd@gentoo.org>
  * Copyright (c) 2000-2003 Johannes Erdfelt <johannes@erdfelt.com>
+ * Copyright (c) 2014 Nathan Hjelm <hjelmn@cs.unm.edu>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -58,6 +60,14 @@ enum usbi_log_level {
 API_EXPORTED struct usb_bus *usb_busses = NULL;
 
 #define compat_err(e) -(errno=libusb_to_errno(e))
+
+static void __attribute__ ((destructor)) _usb_exit (void)
+{
+	if (ctx) {
+		libusb_exit (ctx);
+		ctx = NULL;
+	}
+}
 
 static int libusb_to_errno(int result)
 {

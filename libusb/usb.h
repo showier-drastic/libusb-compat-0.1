@@ -32,6 +32,10 @@
 
 #include <dirent.h>
 
+#ifdef interface
+#undef interface
+#endif
+
 /* stdint.h is not available on older MSVC */
 #if defined(_MSC_VER) && (_MSC_VER < 1600) && (!defined(_STDINT)) && (!defined(_STDINT_H))
 typedef unsigned __int8   uint8_t;

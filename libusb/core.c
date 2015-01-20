@@ -35,6 +35,10 @@
 #include "libusb-dload.h"
 #endif
 
+#ifndef ENODATA
+#define ENODATA EIO
+#endif
+
 static libusb_context *ctx = NULL;
 static int usb_debug = 0;
 

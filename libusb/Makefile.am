@@ -8,6 +8,6 @@ libusb_la_LIBADD = -ldl
 else
 libusb_la_LIBADD = $(LIBUSB_1_0_LIBS)
 endif
-libusb_la_LDFLAGS = -version-info $(LT_MAJOR):$(LT_REVISION):$(LT_AGE) \
+libusb_la_LDFLAGS = -no-undefined -version-info $(LT_MAJOR):$(LT_REVISION):$(LT_AGE) \
 	-release 0.1
 

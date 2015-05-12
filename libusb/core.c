@@ -31,6 +31,10 @@
 #include "usb.h"
 #include "usbi.h"
 
+#ifdef LIBUSB_1_0_SONAME
+#include "libusb-dload.h"
+#endif
+
 static libusb_context *ctx = NULL;
 static int usb_debug = 0;
 
@@ -61,12 +65,22 @@ API_EXPORTED struct usb_bus *usb_busses = NULL;
 
 #define compat_err(e) -(errno=libusb_to_errno(e))
 
+#ifdef LIBUSB_1_0_SONAME
+static void __attribute__ ((constructor)) _usb_init (void)
+{
+	libusb_dl_init ();
+}
+#endif
+
 static void __attribute__ ((destructor)) _usb_exit (void)
 {
 	if (ctx) {
 		libusb_exit (ctx);
 		ctx = NULL;
 	}
+#ifdef LIBUSB_1_0_SONAME
+	libusb_dl_exit ();
+#endif
 }
 
 static int libusb_to_errno(int result)

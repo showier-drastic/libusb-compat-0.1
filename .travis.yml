@@ -27,4 +27,5 @@ before_script:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]] ; then brew install libusb ; fi
 
 script:
-    - ./autogen.sh && make -j4
+    - ./autogen.sh --enable-examples-build && make -j4
+    - cd examples ; ./testlibusb

@@ -19,9 +19,12 @@ addons:
             - automake
             - libtool
             - m4
-            - libusb-1.0-dev
+            - libusb-1.0
         sources:
             - ubuntu-toolchain-r-test
+
+before_script:
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]] ; then brew install libusb ; fi
 
 script:
     - ./autogen.sh && make -j4

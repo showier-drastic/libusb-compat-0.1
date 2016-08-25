@@ -152,6 +152,24 @@ static int (*dl_libusb_clear_halt)(libusb_device_handle *dev,
 #define libusb_unref_device (dl_libusb_unref_device)
 static void (*dl_libusb_unref_device)(libusb_device *dev);
 
+/* NTH: these functions are copied from libusb.h. we can not use the originals because
+ * the #define's above will not modify the calls to libusb_control_transfer. */
+static inline int dl_libusb_get_descriptor(libusb_device_handle *dev,
+        uint8_t desc_type, uint8_t desc_index, unsigned char *data, int length)
+{
+        return dl_libusb_control_transfer(dev, LIBUSB_ENDPOINT_IN,
+                LIBUSB_REQUEST_GET_DESCRIPTOR, (uint16_t) ((desc_type << 8) | desc_index),
+                0, data, (uint16_t) length, 1000);
+}
+
+static inline int dl_libusb_get_string_descriptor(libusb_device_handle *dev,
+        uint8_t desc_index, uint16_t langid, unsigned char *data, int length)
+{
+        return dl_libusb_control_transfer(dev, LIBUSB_ENDPOINT_IN,
+                LIBUSB_REQUEST_GET_DESCRIPTOR, (uint16_t)((LIBUSB_DT_STRING << 8) | desc_index),
+                langid, data, (uint16_t) length, 1000);
+}
+
 static void *libusb_dl_handle;
 
 #define libusb_dl_set_call(call)\

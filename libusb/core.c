@@ -3,7 +3,7 @@
  * Core functions for libusb-compat-0.1
  * Copyright (C) 2008 Daniel Drake <dsd@gentoo.org>
  * Copyright (c) 2000-2003 Johannes Erdfelt <johannes@erdfelt.com>
- * Copyright (c) 2014 Nathan Hjelm <hjelmn@cs.unm.edu>
+ * Copyright (c) 2014-2016 Nathan Hjelm <hjelmn@cs.unm.edu>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,8 +31,13 @@
 #include "usb.h"
 #include "usbi.h"
 
+/* this is a workaround since some legacy apps have borrowed libusb's
+ * namespace. */
 #ifdef LIBUSB_1_0_SONAME
 #include "libusb-dload.h"
+#else
+#define dl_libusb_get_string_descriptor libusb_get_string_descriptor
+#define dl_libusb_get_descriptor libusb_get_descriptor
 #endif
 
 #ifndef ENODATA
@@ -884,7 +889,7 @@ API_EXPORTED int usb_get_string(usb_dev_handle *dev, int desc_index, int langid,
 	char *buf, size_t buflen)
 {
 	int r;
-	r = libusb_get_string_descriptor(dev->handle, desc_index & 0xff,
+	r = dl_libusb_get_string_descriptor(dev->handle, desc_index & 0xff,
 		langid & 0xffff, buf, (int) buflen);
 	if (r >= 0)
 		return r;
@@ -906,7 +911,7 @@ API_EXPORTED int usb_get_descriptor(usb_dev_handle *dev, unsigned char type,
 	unsigned char desc_index, void *buf, int size)
 {
 	int r;
-	r = libusb_get_descriptor(dev->handle, type, desc_index, buf, size);
+	r = dl_libusb_get_descriptor(dev->handle, type, desc_index, buf, size);
 	if (r >= 0)
 		return r;
 	return compat_err(r);

@@ -1,4 +1,4 @@
-AC_INIT([libusb-compat], [0.1.6-rc2])
+AC_INIT([libusb-compat], [0.1.7])
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([libusb/core.c])
 AC_CONFIG_HEADERS([config.h])

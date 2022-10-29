@@ -1,0 +1,30 @@
+name: linux
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on: [push, pull_request]
+
+# A workflow run is made up of one or more jobs that can run
+# sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job
+      # can access it
+      - uses: actions/checkout@v2
+
+      - name: setup prerequisites
+        shell: bash
+        run: |
+          sudo apt update
+          sudo apt install autoconf automake libtool libusb-1.0-0-dev m4
+      - name: build
+        shell: bash
+        run: ./autogen.sh --enable-examples-build && make -j4
+      - name: runtest
+        shell: bash
+        run: ./examples/testlibusb

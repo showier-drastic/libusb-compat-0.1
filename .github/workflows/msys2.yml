@@ -1,0 +1,24 @@
+name: MSYS2 build
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: git mingw-w64-x86_64-cc mingw-w64-x86_64-autotools mingw-w64-x86_64-libusb
+      - name: CI-Build
+        run: |
+          echo 'Running in MSYS2!'
+          ./bootstrap.sh
+          ./configure --enable-examples-build && make -j4
+      - name: runtest
+        shell: bash
+        run: ./examples/testlibusb

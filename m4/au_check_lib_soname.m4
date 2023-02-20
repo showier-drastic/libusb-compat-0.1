@@ -11,12 +11,12 @@ m4_pattern_allow([^AU_])
 AC_DEFUN([AU_CHECK_LIB_SONAME], [
   AC_REQUIRE([LT_INIT])
   AS_VAR_PUSHDEF([ac_Lib_SONAME], [au_cv_lib_soname_$1])
-  AC_ARG_VAR([$1][_SONAME], [SONAME of lib$2, overriding ldd check])
+  AC_ARG_VAR([$1][_SONAME], [SONAME of lib$2, overriding objdump check])
   AC_CHECK_LIB($2,$3,[
-    AC_PATH_PROG([PATH_LDD], [ldd])
+    AC_PATH_PROG([PATH_OBJDUMP], [objdump])
     AC_CACHE_CHECK([for SONAME of lib$2], [ac_Lib_SONAME],[
       AS_IF([test x"$[$1][_SONAME]" = x""], [
-        AS_IF([test x"$PATH_LDD" != x""], [
+        AS_IF([test x"$PATH_OBJDUMP" != x""], [
           AS_VAR_SET([ac_Lib_SONAME], ["unknown"])
           AU_CHECK_LIB_SONAME_LIBS="$LIBS"
           LIBS="$LIBS $7 -l$2"
@@ -26,7 +26,7 @@ void libusb_close(void *);
 ], [
 libusb_close((void*)0);
 ],
-              [AS_VAR_SET([ac_Lib_SONAME], [`ldd conftest$ac_exeext | grep 'lib[$2]'$shrext_regexp | sed 's/^@<:@ \t@:>@*lib[$2]'$shrext_regexp'/lib[$2]'$shrext_regexp'/;s/@<:@ \t@:>@.*$//'`])])
+              [AS_VAR_SET([ac_Lib_SONAME], [`objdump -p conftest$ac_exeext | sed -n 's/@<:@ \t@:>@\+NEEDED@<:@ \t@:>@\+\('lib[$2]$shrext_regexp'.*\)$/\1/p'`])])
           LIBS="$AU_CHECK_LIB_SONAME_LIBS"
           AS_IF([test x"$ac_Lib_SONAME" = x ],
             [AS_VAR_SET([ac_Lib_SONAME], [unknown])])

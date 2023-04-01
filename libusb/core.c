@@ -44,10 +44,6 @@
 #define ENODATA EIO
 #endif
 
-#if !defined(LIBUSB_API_VERSION) || (LIBUSB_API_VERSION < 0x0100010A)
-#define libusb_init_context(a, b, c) libusb_init(a)
-#endif
-
 static libusb_context *ctx = NULL;
 static int usb_debug = 0;
 

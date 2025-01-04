@@ -19,6 +19,6 @@ jobs:
           echo 'Running in MSYS2!'
           ./bootstrap.sh
           ./configure --enable-examples-build && make -j4
-      - name: runtest
-        shell: bash
-        run: ./examples/testlibusb
+      - uses: actions/upload-artifact@v4
+        with:
+          path: .

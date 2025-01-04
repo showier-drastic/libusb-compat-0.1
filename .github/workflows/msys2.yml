@@ -18,7 +18,7 @@ jobs:
         run: |
           echo 'Running in MSYS2!'
           ./bootstrap.sh
-          ./configure --enable-examples-build && make -j4
+          ./configure --enable-examples-build --enable-shared && make -j4
       - uses: actions/upload-artifact@v4
         with:
           path: .
